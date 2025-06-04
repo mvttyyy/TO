@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pl">
+<head><meta charset="utf-8"><title>Biblioteka</title></head>
+<body>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class="flashes">
+      {% for m in messages %}
+        <li>{{ m }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <h1>Lista mediów</h1>
+  <table border="1">
+    <tr><th>#</th><th>Tytuł</th><th>Status</th></tr>
+    {% for b in books %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ b.title }}</td>
+      <td>{{ b.status }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <h2>Czynność</h2>
+  <form action="{{ url_for('action') }}" method="post">
+    <select name="cmd">
+      <option value="borrow">Wypożycz</option>
+      <option value="reserve">Zarezerwuj</option>
+      <option value="return">Zwróć</option>
+      <option value="cancel">Anuluj rezerwację</option>
+    </select>
+    <input name="user" placeholder="Użytkownik" required>
+    <input name="title" placeholder="Tytuł książki" required>
+    <button type="submit">OK</button>
+  </form>
+</body>
+</html>
