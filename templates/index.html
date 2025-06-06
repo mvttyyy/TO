@@ -14,15 +14,33 @@
 
   <h1>Lista mediów</h1>
   <table border="1">
-    <tr><th>#</th><th>Tytuł</th><th>Status</th></tr>
+    <tr><th>#</th><th>Tytuł</th><th>Status</th><th>Akcje</th></tr>
     {% for b in books %}
     <tr>
-      <td>{{ loop.index }}</td>
-      <td>{{ b.title }}</td>
+      <td>{{ loop.index + (page-1)*10 }}</td>
+      <td>
+        <a href="{{ url_for('details', title=b.title) }}">{{ b.title }}</a>
+      </td>
       <td>{{ b.status }}</td>
+      <td>
+        <form action="{{ url_for('delete') }}" method="post" style="display:inline;">
+          <input type="hidden" name="title" value="{{ b.title }}">
+          <button type="submit" onclick="return confirm('Na pewno usunąć?')">Usuń</button>
+        </form>
+      </td>
     </tr>
     {% endfor %}
   </table>
+
+  <div>
+    {% if page > 1 %}
+      <a href="{{ url_for('index', page=page-1) }}">Poprzednia</a>
+    {% endif %}
+    Strona {{ page }} z {{ total_pages }}
+    {% if page < total_pages %}
+      <a href="{{ url_for('index', page=page+1) }}">Następna</a>
+    {% endif %}
+  </div>
 
   <h2>Czynność</h2>
   <form action="{{ url_for('action') }}" method="post">
@@ -36,5 +54,7 @@
     <input name="title" placeholder="Tytuł książki" required>
     <button type="submit">OK</button>
   </form>
+
+  <p><a href="{{ url_for('add') }}">Dodaj książkę lub audiobook</a></p>
 </body>
 </html>

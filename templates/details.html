@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Szczegóły książki</title>
+</head>
+<body>
+  <h1>Szczegóły książki</h1>
+  <table border="1">
+    <tr><th>Tytuł</th><td>{{ book.title }}</td></tr>
+    <tr><th>Autor</th><td>{{ book.author }}</td></tr>
+    <tr><th>Status</th><td>{{ book.status }}</td></tr>
+    <tr><th>Rodzaj</th>
+      <td>
+        {% if book.format %}
+          {{ book.format }}
+        {% else %}
+          książka
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+  <a href="{{ url_for('index') }}">Powrót do listy</a>
+</body>
+</html>

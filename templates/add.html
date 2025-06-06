@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Dodaj książkę lub audiobook</title>
+</head>
+<body>
+  <h1>Dodaj książkę lub audiobook</h1>
+  <form method="post">
+    <label>Rodzaj:
+      <select name="media_type">
+        <option value="book">Książka</option>
+        <option value="audiobook">Audiobook</option>
+      </select>
+    </label><br>
+    <label>Tytuł: <input name="title" required></label><br>
+    <label>Autor: <input name="author" required></label><br>
+    <button type="submit">Dodaj</button>
+  </form>
+  <a href="{{ url_for('index') }}">Powrót do listy</a>
+</body>
+</html>

@@ -16,6 +16,5 @@ class MediaFactory:
         except KeyError:
             raise ValueError(f"Unknown media type: {media_type}")
 
-# register defaults
-MediaFactory.register("book", BookProxy)       # now returns a BookProxy (LSP)
+MediaFactory.register("book", BookProxy)
 MediaFactory.register("audiobook", Audiobook)

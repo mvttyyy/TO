@@ -10,7 +10,6 @@ class ConsoleView:
         print("[n]astępna, [p]oprzednia, [q] powrót do menu")
 
     def show_media_list(self, books):
-        # jeśli chcemy bez paginacji
         print("\n=== LISTA MEDIÓW ===")
         for idx, b in enumerate(books, 1):
             print(f"{idx}. {b.title} ({b.status})")
@@ -21,7 +20,6 @@ class ConsoleView:
     def prompt_index(self, msg, max_idx):
         while True:
             try:
-                # use the existing prompt() to read input
                 idx = int(self.prompt(msg))
                 if 1 <= idx <= max_idx:
                     return idx - 1

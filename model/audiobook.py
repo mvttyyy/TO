@@ -1,4 +1,3 @@
-# model/audiobook.py
 from model.book import Book
 
 class Audiobook(Book):

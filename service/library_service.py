@@ -6,7 +6,6 @@ class LibraryService:
     def __init__(self, books: IBookRepository, users: IUserRepository):
         self.books = books
         self.users = users
-        # command registry for OCP
         self._actions = {}
         self.register_action("borrow",   self._do_borrow)
         self.register_action("reserve",  self._do_reserve)
@@ -81,10 +80,8 @@ class LibraryService:
         book = self.books.find_by_title(title)
         if not user or not book or book not in user.reserved:
             return False, f"Brak rezerwacji '{title}' przez {user_name}"
-        # usuń rezerwację w DB i lokalnie
         self.users.remove_reserve(user_name, title)
         user.cancel_reservation(book)
-        # zwolnij status książki
         book.status = 'available'
         self.books.update(book)
         return True, f"Rezerwacja '{title}' anulowana przez {user_name}"

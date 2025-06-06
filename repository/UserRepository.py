@@ -24,7 +24,6 @@ class UserRepository(IUserRepository):
             return None
         user = User(row['name'])
         user.reserved = []
-        # load borrowed books
         rows = self.conn.execute(
             "SELECT b.title,b.author,b.status "
             "FROM borrowed br "
@@ -36,7 +35,6 @@ class UserRepository(IUserRepository):
             bk = Book(r['title'], r['author'])
             bk.status = r['status']
             user.borrowed.append(bk)
-        # load reserved books
         rows2 = self.conn.execute(
             "SELECT b.title,b.author,b.status "
             "FROM reserved r "

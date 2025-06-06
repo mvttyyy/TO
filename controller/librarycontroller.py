@@ -6,9 +6,7 @@ class LibraryController:
     def __init__(self,
                  books_repo: BookRepository = BookRepository(),
                  users_repo: UserRepository = UserRepository()):
-        # DIP: inject repos
         self.service = LibraryService(books_repo, users_repo)
-        # expose repos for callers
         self.books = books_repo
         self.users = users_repo
 
@@ -32,3 +30,6 @@ class LibraryController:
 
     def return_media(self, user_name, title):
         return self.service.execute("return", user_name, title)
+
+    def remove_media(self, title):
+        return self.books.remove_by_title(title)

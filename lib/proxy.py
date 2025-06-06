@@ -8,7 +8,6 @@ class BookProxy(Book):
     def _load_book(self):
         if self._real_book is None:
             print(f"Loading book '{self.title}' from storage...")
-            # load fresh Book instance
             self._real_book = Book(self.title, self.author)
 
     def get_real_book(self):
@@ -16,5 +15,4 @@ class BookProxy(Book):
         return self._real_book
 
     def __getattr__(self, name):
-        # forward any missing attribute calls to real Book
         return getattr(self.get_real_book(), name)

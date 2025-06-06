@@ -8,15 +8,13 @@ class BookRepository(IBookRepository):
         self.conn = get_connection()
 
     def save(self, book):
-        # status column is now just initial, real status derived from relations
         self.conn.execute(
-            "INSERT OR IGNORE INTO books(title,author) VALUES(?,?)",
-            (book.title, book.author)
+            "INSERT OR IGNORE INTO books(title,author,status) VALUES(?,?,?)",
+            (book.title, book.author, book.status)
         )
         self.conn.commit()
 
     def update(self, book):
-        # keep status column in sync (optional)
         self.conn.execute(
             "UPDATE books SET status = ? WHERE title = ?",
             (book.status, book.title)
@@ -32,7 +30,6 @@ class BookRepository(IBookRepository):
             return None
         b = Book(row['title'], row['author'])
         b.id = row['id']
-        # derive actual status from borrowed/reserved tables
         if self.conn.execute(
             "SELECT 1 FROM borrowed WHERE book_id=?", (b.id,)
         ).fetchone():
@@ -53,7 +50,6 @@ class BookRepository(IBookRepository):
         for row in rows:
             b = Book(row['title'], row['author'])
             b.id = row['id']
-            # derive status
             if self.conn.execute(
                 "SELECT 1 FROM borrowed WHERE book_id=?", (b.id,)
             ).fetchone():
@@ -66,3 +62,20 @@ class BookRepository(IBookRepository):
                 b.status = 'available'
             result.append(b)
         return result
+
+    def remove_by_title(self, title):
+        row = self.conn.execute(
+            "SELECT id FROM books WHERE title = ?", (title,)
+        ).fetchone()
+        if not row:
+            return False, "Nie znaleziono książki."
+        book_id = row['id']
+        if self.conn.execute("SELECT 1 FROM borrowed WHERE book_id=?", (book_id,)).fetchone():
+            return False, "Nie można usunąć książki, która jest wypożyczona."
+        if self.conn.execute("SELECT 1 FROM reserved WHERE book_id=?", (book_id,)).fetchone():
+            return False, "Nie można usunąć książki, która jest zarezerwowana."
+        self.conn.execute(
+            "DELETE FROM books WHERE id = ?", (book_id,)
+        )
+        self.conn.commit()
+        return True, "Książka została usunięta."
