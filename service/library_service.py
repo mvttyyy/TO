@@ -37,15 +37,14 @@ class LibraryService:
     def _do_borrow(self, user_name: str, title: str):
         user = self.users.find_by_name(user_name)
         book = self.books.find_by_title(title)
-        if book.status == 'available' or (book.status == 'reserved' and book in user.reserved):
-            book.borrow()
+        if book.borrow():
             self.books.update(book)
             self.users.add_borrow(user_name, title)
             if book in user.reserved:
                 user.reserved.remove(book)
                 self.users.remove_reserve(user_name, title)
             return True, f"'{title}' wypożyczono przez {user_name}"
-        return False, f"Książka '{title}' jest obecnie {book.status}"
+        return False, f"Książka '{title}' jest obecnie niedostępna"
 
     def _do_reserve(self, user_name: str, title: str):
         user = self.users.find_by_name(user_name)
@@ -55,7 +54,7 @@ class LibraryService:
         if not book:
             return False, f"Nie znaleziono pozycji '{title}'"
         if not book.reserve():
-            return False, f"Nie można zarezerwować '{title}' (status: {book.status})"
+            return False, f"Nie można zarezerwować '{title}'"
         book.add_observer(user)
         self.books.update(book)
         self.users.add_reserve(user_name, title)

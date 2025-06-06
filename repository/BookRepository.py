@@ -2,6 +2,7 @@ import sqlite3
 from model.book import Book
 from lib.db import get_connection
 from repository.interfaces import IBookRepository
+from lib.proxy import BookProxy
 
 class BookRepository(IBookRepository):
     def __init__(self):
@@ -49,27 +50,13 @@ class BookRepository(IBookRepository):
 
     def all(self):
         rows = self.conn.execute(
-            "SELECT id,title,author,quantity FROM books"
+            "SELECT id,title FROM books"
         ).fetchall()
         result = []
         for row in rows:
-            b = Book(row['title'], row['author'], row['quantity'])
+            # BookProxy bez autora i bez ilości, tylko tytuł
+            b = BookProxy(row['title'], author=None, quantity=None)
             b.id = row['id']
-            borrowed = self.conn.execute(
-                "SELECT COUNT(*) FROM borrowed WHERE book_id=?", (b.id,)
-            ).fetchone()[0]
-            reserved = self.conn.execute(
-                "SELECT COUNT(*) FROM reserved WHERE book_id=?", (b.id,)
-            ).fetchone()[0]
-            b.borrowed_count = borrowed
-            b.reserved_count = reserved
-            b.available = b.total_quantity - borrowed - reserved
-            if borrowed > 0:
-                b.status = 'borrowed'
-            elif reserved > 0:
-                b.status = 'reserved'
-            else:
-                b.status = 'available'
             result.append(b)
         return result
 

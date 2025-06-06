@@ -8,12 +8,25 @@ class Book:
         self.quantity = quantity
 
     def borrow(self):
-        if self.status in ('available', 'reserved'):
+        # Sprawdź, czy są dostępne egzemplarze
+        if hasattr(self, "available"):
+            if self.available > 0:
+                return True
+            return False
+        # fallback dla konsoli/testów
+        if self.quantity > 0:
             return True
         return False
 
     def reserve(self):
-        if self.status in ('available', 'borrowed'):
+        # Pozwól zarezerwować tylko jeśli jest dostępny egzemplarz
+        if hasattr(self, "available"):
+            if self.available > 0 and self.status in ('available', 'borrowed'):
+                self.status = 'reserved'
+                return True
+            return False
+        # fallback dla konsoli/testów
+        if self.quantity > 0 and self.status in ('available', 'borrowed'):
             self.status = 'reserved'
             return True
         return False

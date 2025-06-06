@@ -14,14 +14,13 @@
 
   <h1>Lista mediów</h1>
   <table border="1">
-    <tr><th>#</th><th>Tytuł</th><th>Dostępne</th><th>Akcje</th></tr>
+    <tr><th>#</th><th>Tytuł</th><th>Akcje</th></tr>
     {% for b in books %}
     <tr>
       <td>{{ loop.index + (page-1)*10 }}</td>
       <td>
         <a href="{{ url_for('details', title=b.title) }}">{{ b.title }}</a>
       </td>
-      <td>{{ b.available }}/{{ b.total_quantity }}</td>
       <td>
         <form action="{{ url_for('delete') }}" method="post" style="display:inline;">
           <input type="hidden" name="title" value="{{ b.title }}">
