@@ -24,6 +24,7 @@ Złożony problem zarządzania biblioteką został rozbity na następujące pod-
 
 ## Wzorce projektowe
 
+- **Singleton:** Zapewnia istnienie tylko jednego połączenia z bazą danych w całej aplikacji (`lib/db.py`).
 - **Factory:** Umożliwia dynamiczne tworzenie różnych typów mediów (książka, audiobook) na podstawie typu przekazanego przez użytkownika (`lib/factory.py`).
 - **Proxy:** Pośredniczy w dostępie do obiektów książek, umożliwiając np. opóźnione ładowanie (`lib/proxy.py`).
 - **Repository:** Oddziela logikę dostępu do danych od logiki biznesowej (`repository/BookRepository.py`, `repository/UserRepository.py`).
