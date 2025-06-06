@@ -59,11 +59,12 @@ def add():
         media_type = request.form["media_type"]
         title = request.form["title"]
         author = request.form["author"]
+        quantity = int(request.form.get("quantity", 1))
         if not title or not author:
             flash("Tytuł i autor są wymagane.")
             return redirect(url_for("add"))
         try:
-            ctrl.add_media(media_type, title, author)
+            ctrl.add_media(media_type, title, author, quantity)
             flash(f"{media_type.capitalize()} '{title}' dodano.")
         except Exception as e:
             flash(f"Błąd: {e}")

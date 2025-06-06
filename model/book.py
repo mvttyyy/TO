@@ -1,13 +1,14 @@
 class Book:
-    def __init__(self, title, author):
+    def __init__(self, title, author, quantity=1):
         self.title = title
         self.author = author
         self.status = 'available'
         self.observers = []
+        self.total_quantity = quantity
+        self.quantity = quantity
 
     def borrow(self):
         if self.status in ('available', 'reserved'):
-            self.status = 'borrowed'
             return True
         return False
 
@@ -34,5 +35,5 @@ class Book:
 
     def __hash__(self):
         return hash((self.title, self.author))
-   
+
 

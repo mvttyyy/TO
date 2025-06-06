@@ -9,34 +9,39 @@ class BookRepository(IBookRepository):
 
     def save(self, book):
         self.conn.execute(
-            "INSERT OR IGNORE INTO books(title,author,status) VALUES(?,?,?)",
-            (book.title, book.author, book.status)
+            "INSERT OR IGNORE INTO books(title,author,status,quantity) VALUES(?,?,?,?)",
+            (book.title, book.author, book.status, book.quantity)
         )
         self.conn.commit()
 
     def update(self, book):
         self.conn.execute(
-            "UPDATE books SET status = ? WHERE title = ?",
-            (book.status, book.title)
+            "UPDATE books SET status = ?, quantity = ? WHERE title = ?",
+            (book.status, book.quantity, book.title)
         )
         self.conn.commit()
 
     def find_by_title(self, title):
         row = self.conn.execute(
-            "SELECT id,title,author FROM books WHERE title = ?",
+            "SELECT id,title,author,quantity FROM books WHERE title = ?",
             (title,)
         ).fetchone()
         if not row:
             return None
-        b = Book(row['title'], row['author'])
+        b = Book(row['title'], row['author'], row['quantity'])
         b.id = row['id']
-        if self.conn.execute(
-            "SELECT 1 FROM borrowed WHERE book_id=?", (b.id,)
-        ).fetchone():
+        borrowed = self.conn.execute(
+            "SELECT COUNT(*) FROM borrowed WHERE book_id=?", (b.id,)
+        ).fetchone()[0]
+        reserved = self.conn.execute(
+            "SELECT COUNT(*) FROM reserved WHERE book_id=?", (b.id,)
+        ).fetchone()[0]
+        b.borrowed_count = borrowed
+        b.reserved_count = reserved
+        b.available = b.total_quantity - borrowed - reserved
+        if borrowed > 0:
             b.status = 'borrowed'
-        elif self.conn.execute(
-            "SELECT 1 FROM reserved WHERE book_id=?", (b.id,)
-        ).fetchone():
+        elif reserved > 0:
             b.status = 'reserved'
         else:
             b.status = 'available'
@@ -44,19 +49,24 @@ class BookRepository(IBookRepository):
 
     def all(self):
         rows = self.conn.execute(
-            "SELECT id,title,author FROM books"
+            "SELECT id,title,author,quantity FROM books"
         ).fetchall()
         result = []
         for row in rows:
-            b = Book(row['title'], row['author'])
+            b = Book(row['title'], row['author'], row['quantity'])
             b.id = row['id']
-            if self.conn.execute(
-                "SELECT 1 FROM borrowed WHERE book_id=?", (b.id,)
-            ).fetchone():
+            borrowed = self.conn.execute(
+                "SELECT COUNT(*) FROM borrowed WHERE book_id=?", (b.id,)
+            ).fetchone()[0]
+            reserved = self.conn.execute(
+                "SELECT COUNT(*) FROM reserved WHERE book_id=?", (b.id,)
+            ).fetchone()[0]
+            b.borrowed_count = borrowed
+            b.reserved_count = reserved
+            b.available = b.total_quantity - borrowed - reserved
+            if borrowed > 0:
                 b.status = 'borrowed'
-            elif self.conn.execute(
-                "SELECT 1 FROM reserved WHERE book_id=?", (b.id,)
-            ).fetchone():
+            elif reserved > 0:
                 b.status = 'reserved'
             else:
                 b.status = 'available'

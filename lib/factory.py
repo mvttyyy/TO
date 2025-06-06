@@ -10,9 +10,9 @@ class MediaFactory:
         cls._registry[media_type] = ctor
 
     @classmethod
-    def create_media(cls, media_type: str, title: str, author: str):
+    def create_media(cls, media_type: str, title: str, author: str, quantity=1):
         try:
-            return cls._registry[media_type](title, author)
+            return cls._registry[media_type](title, author, quantity)
         except KeyError:
             raise ValueError(f"Unknown media type: {media_type}")
 

@@ -21,10 +21,11 @@ def init_db():
     """)
     c.execute("""
       CREATE TABLE IF NOT EXISTS books(
-        id     INTEGER PRIMARY KEY AUTOINCREMENT,
-        title  TEXT    UNIQUE NOT NULL,
-        author TEXT            NOT NULL,
-        status TEXT            NOT NULL
+        id      INTEGER PRIMARY KEY AUTOINCREMENT,
+        title   TEXT    UNIQUE NOT NULL,
+        author  TEXT            NOT NULL,
+        status  TEXT            NOT NULL,
+        quantity INTEGER        NOT NULL DEFAULT 1
       )
     """)
     c.execute("""

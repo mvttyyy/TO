@@ -15,6 +15,7 @@
     </label><br>
     <label>Tytuł: <input name="title" required></label><br>
     <label>Autor: <input name="author" required></label><br>
+    <label>Ilość: <input name="quantity" type="number" min="1" value="1" required></label><br>
     <button type="submit">Dodaj</button>
   </form>
   <a href="{{ url_for('index') }}">Powrót do listy</a>

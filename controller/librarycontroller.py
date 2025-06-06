@@ -13,8 +13,8 @@ class LibraryController:
     def register_user(self, name):
         return self.service.register_user(name)
 
-    def add_media(self, media_type, title, author):
-        return self.service.add_media(media_type, title, author)
+    def add_media(self, media_type, title, author, quantity=1):
+        return self.service.add_media(media_type, title, author, quantity)
 
     def list_media(self):
         return self.service.list_media()

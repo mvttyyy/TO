@@ -9,7 +9,14 @@
   <table border="1">
     <tr><th>Tytuł</th><td>{{ book.title }}</td></tr>
     <tr><th>Autor</th><td>{{ book.author }}</td></tr>
-    <tr><th>Status</th><td>{{ book.status }}</td></tr>
+    <tr>
+      <th>Status</th>
+      <td>
+        borrowed: {{ book.borrowed_count }}<br>
+        reserved: {{ book.reserved_count }}<br>
+        available: {{ book.available }}
+      </td>
+    </tr>
     <tr><th>Rodzaj</th>
       <td>
         {% if book.format %}
@@ -19,6 +26,7 @@
         {% endif %}
       </td>
     </tr>
+    <tr><th>Dostępne egzemplarze</th><td>{{ book.available }}/{{ book.total_quantity }}</td></tr>
   </table>
   <a href="{{ url_for('index') }}">Powrót do listy</a>
 </body>

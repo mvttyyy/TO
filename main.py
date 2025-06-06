@@ -7,33 +7,6 @@ def main():
     ctrl = LibraryController()
     view = ConsoleView()
 
-    ctrl.register_user("Ola")
-    ctrl.register_user("Tomek")
-
-    media_to_seed = [
-        ("book", "Wiedźmin", "A. Sapkowski"),
-        ("audiobook", "Mistrz i Małgorzata", "M. Bułhakow"),
-        ("book", "Pan Tadeusz", "Adam Mickiewicz"),
-        ("book", "Rok 1984", "George Orwell"),
-        ("book", "Zbrodnia i kara", "Fiodor Dostojewski"),
-        ("book", "Harry Potter i Kamień Filozoficzny", "J.K. Rowling"),
-        ("book", "Hobbit, czyli tam i z powrotem", "J.R.R. Tolkien"),
-        ("book", "Przeminęło z wiatrem", "Margaret Mitchell"),
-        ("book", "Duma i uprzedzenie", "Jane Austen"),
-        ("book", "Wojna i pokój", "Lew Tołstoj"),
-        ("book", "Bracia Karamazow", "Fiodor Dostojewski"),
-        ("book", "Sto lat samotności", "Gabriel García Márquez"),
-        ("book", "Wielki Gatsby", "F. Scott Fitzgerald"),
-        ("book", "Zabić drozda", "Harper Lee"),
-        ("book", "Krzyżacy", "Henryk Sienkiewicz"),
-        ("audiobook", "Solaris", "Stanisław Lem"),
-        ("audiobook", "Mały Książę", "Antoine de Saint-Exupéry"),
-    ]
-    existing = {b.title for b in ctrl.books.all()}
-    for media_type, title, author in media_to_seed:
-        if title not in existing:
-            ctrl.add_media(media_type, title, author)
-
     books = ctrl.books.all()
     page = 0
     page_size = 10

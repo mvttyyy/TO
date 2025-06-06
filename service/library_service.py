@@ -26,8 +26,8 @@ class LibraryService:
         self.users.save(user)
         return True, f"Użytkownik '{name}' zarejestrowany"
 
-    def add_media(self, media_type: str, title: str, author: str):
-        media = MediaFactory.create_media(media_type, title, author)
+    def add_media(self, media_type: str, title: str, author: str, quantity=1):
+        media = MediaFactory.create_media(media_type, title, author, quantity)
         self.books.save(media)
         return media
 
