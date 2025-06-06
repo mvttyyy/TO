@@ -2,13 +2,22 @@ import sqlite3, os
 
 DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'library.db')
 
+class SingletonDBConnection:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+            cls._instance.conn.row_factory = sqlite3.Row
+            cls._instance.conn.execute("PRAGMA foreign_keys = ON")
+        return cls._instance
+
+    def get_connection(self):
+        return self.conn
+
 def get_connection():
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA foreign_keys = ON")
-    return conn
-
-
+    return SingletonDBConnection().get_connection()
 
 def init_db():
     conn = get_connection()
