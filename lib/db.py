@@ -34,7 +34,8 @@ def init_db():
         title   TEXT    UNIQUE NOT NULL,
         author  TEXT            NOT NULL,
         status  TEXT            NOT NULL,
-        quantity INTEGER        NOT NULL DEFAULT 1
+        quantity INTEGER        NOT NULL DEFAULT 1,
+        format TEXT
       )
     """)
     c.execute("""

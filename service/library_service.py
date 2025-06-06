@@ -36,7 +36,11 @@ class LibraryService:
 
     def _do_borrow(self, user_name: str, title: str):
         user = self.users.find_by_name(user_name)
+        if not user:
+            return False, f"Nie znaleziono użytkownika '{user_name}'"
         book = self.books.find_by_title(title)
+        if not book:
+            return False, f"Nie znaleziono pozycji '{title}'"
         if book.borrow():
             self.books.update(book)
             self.users.add_borrow(user_name, title)
@@ -45,20 +49,6 @@ class LibraryService:
                 self.users.remove_reserve(user_name, title)
             return True, f"'{title}' wypożyczono przez {user_name}"
         return False, f"Książka '{title}' jest obecnie niedostępna"
-
-    def _do_reserve(self, user_name: str, title: str):
-        user = self.users.find_by_name(user_name)
-        if not user:
-            return False, f"Nie znaleziono użytkownika '{user_name}'"
-        book = self.books.find_by_title(title)
-        if not book:
-            return False, f"Nie znaleziono pozycji '{title}'"
-        if not book.reserve():
-            return False, f"Nie można zarezerwować '{title}'"
-        book.add_observer(user)
-        self.books.update(book)
-        self.users.add_reserve(user_name, title)
-        return True, f"'{title}' zarezerwowano przez {user_name}"
 
     def _do_return(self, user_name: str, title: str):
         user = self.users.find_by_name(user_name)
@@ -74,10 +64,27 @@ class LibraryService:
         self.users.remove_borrow(user_name, title)
         return True, f"'{title}' zwrócono przez {user_name}"
 
+    def _do_reserve(self, user_name: str, title: str):
+        user = self.users.find_by_name(user_name)
+        if not user:
+            return False, f"Nie znaleziono użytkownika '{user_name}'"
+        book = self.books.find_by_title(title)
+        if not book:
+            return False, f"Nie znaleziono pozycji '{title}'"
+        if not book.reserve():
+            return False, f"Nie można zarezerwować '{title}'"
+        self.books.update(book)
+        self.users.add_reserve(user_name, title)
+        return True, f"'{title}' zarezerwowano przez {user_name}"
+
     def _do_cancel(self, user_name: str, title: str):
         user = self.users.find_by_name(user_name)
+        if not user:
+            return False, f"Nie znaleziono użytkownika '{user_name}'"
         book = self.books.find_by_title(title)
-        if not user or not book or book not in user.reserved:
+        if not book:
+            return False, f"Nie znaleziono pozycji '{title}'"
+        if book not in user.reserved:
             return False, f"Brak rezerwacji '{title}' przez {user_name}"
         self.users.remove_reserve(user_name, title)
         user.cancel_reservation(book)

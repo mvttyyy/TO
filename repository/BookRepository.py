@@ -1,5 +1,6 @@
 import sqlite3
 from model.book import Book
+from model.audiobook import Audiobook
 from lib.db import get_connection
 from repository.interfaces import IBookRepository
 from lib.proxy import BookProxy
@@ -9,9 +10,10 @@ class BookRepository(IBookRepository):
         self.conn = get_connection()
 
     def save(self, book):
+        format_value = getattr(book, "format", None)
         self.conn.execute(
-            "INSERT OR IGNORE INTO books(title,author,status,quantity) VALUES(?,?,?,?)",
-            (book.title, book.author, book.status, book.quantity)
+            "INSERT OR IGNORE INTO books(title,author,status,quantity,format) VALUES(?,?,?,?,?)",
+            (book.title, book.author, book.status, book.quantity, format_value)
         )
         self.conn.commit()
 
@@ -24,12 +26,15 @@ class BookRepository(IBookRepository):
 
     def find_by_title(self, title):
         row = self.conn.execute(
-            "SELECT id,title,author,quantity FROM books WHERE title = ?",
+            "SELECT id,title,author,quantity,format FROM books WHERE title = ?",
             (title,)
         ).fetchone()
         if not row:
             return None
-        b = Book(row['title'], row['author'], row['quantity'])
+        if row['format'] == 'audio':
+            b = Audiobook(row['title'], row['author'], row['quantity'])
+        else:
+            b = Book(row['title'], row['author'], row['quantity'])
         b.id = row['id']
         borrowed = self.conn.execute(
             "SELECT COUNT(*) FROM borrowed WHERE book_id=?", (b.id,)
@@ -54,7 +59,6 @@ class BookRepository(IBookRepository):
         ).fetchall()
         result = []
         for row in rows:
-            # BookProxy bez autora i bez ilości, tylko tytuł
             b = BookProxy(row['title'], author=None, quantity=None)
             b.id = row['id']
             result.append(b)

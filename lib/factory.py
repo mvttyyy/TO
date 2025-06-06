@@ -16,5 +16,13 @@ class MediaFactory:
         except KeyError:
             raise ValueError(f"Unknown media type: {media_type}")
 
+    def save(self, book):
+        format_value = getattr(book, "format", None)
+        self.conn.execute(
+            "INSERT OR IGNORE INTO books(title,author,status,quantity,format) VALUES(?,?,?,?,?)",
+            (book.title, book.author, book.status, book.quantity, format_value)
+        )
+        self.conn.commit()
+
 MediaFactory.register("book", BookProxy)
 MediaFactory.register("audiobook", Audiobook)
