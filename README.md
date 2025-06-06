@@ -34,17 +34,4 @@ Złożony problem zarządzania biblioteką został rozbity na następujące pod-
 - **Command/Registry:** Pozwala rejestrować i wykonywać różne akcje (wypożyczenie, rezerwacja, zwrot, anulowanie) przez centralny rejestr poleceń (`service/library_service.py`).
 - **Observer (uproszczony):** Powiadamia użytkowników o zmianie statusu książki (`model/book.py`).
 
-## Wzorzec architektoniczny
-
-Projekt konsekwentnie stosuje architekturę MVC, rozdzielając warstwę modelu, widoku i kontrolera. Dzięki temu kod jest czytelny, łatwy w utrzymaniu i rozbudowie.
-
-## Podsumowanie
-
-Projekt spełnia wszystkie wymagania:
-
-- dekomponuje złożony problem na pod-problemy,
-- stosuje zasady SOLID,
-- wykorzystuje wzorce projektowe i architektoniczne adekwatnie do problemu,
-- zapewnia czytelność, rozszerzalność i bezpieczeństwo działania systemu.
-
 System jest gotowy do dalszego rozwoju i może być łatwo rozszerzony o nowe typy mediów, dodatkowe procesy lub inne interfejsy użytkownika.
