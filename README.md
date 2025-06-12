@@ -4,6 +4,75 @@
 
 Projekt stanowi implementację systemu bibliotecznego, który modeluje złożony problem zarządzania zbiorami mediów (książki, audiobooki), użytkownikami oraz procesami wypożyczeń i rezerwacji. System został zaprojektowany z myślą o dekompozycji problemu na pod-problemy składowe, zgodnie z zasadami SOLID, z wykorzystaniem wzorców projektowych i architektonicznych.
 
+## Technologie
+
+- Python 3.10+
+- Flask (interfejs webowy)
+- SQLite (baza danych)
+- Standardowa biblioteka Python (sqlite3, os)
+- Wzorce projektowe: Singleton, Factory, Proxy, Repository, MVC, Command/Registry
+
+## Struktura projektu
+
+```
+TO/
+├── app.py                # Aplikacja webowa Flask
+├── main.py               # Konsolowy interfejs użytkownika
+├── lib/
+│   ├── db.py             # Singleton DB + inicjalizacja bazy
+│   ├── factory.py        # Fabryka mediów (książka, audiobook)
+│   └── proxy.py          # Proxy dla książek
+├── model/
+│   ├── book.py           # Model książki
+│   ├── audiobook.py      # Model audiobooka
+│   └── user.py           # Model użytkownika
+├── repository/
+│   ├── BookRepository.py # Repozytorium książek
+│   ├── UserRepository.py # Repozytorium użytkowników
+│   └── interfaces.py     # Interfejsy repozytoriów
+├── service/
+│   └── library_service.py # Logika biznesowa i rejestr akcji
+├── controller/
+│   └── librarycontroller.py # Kontroler (MVC)
+├── view/
+│   └── consoleview.py    # Widok konsolowy
+├── templates/
+│   ├── index.html        # Widok listy mediów (Flask)
+│   ├── details.html      # Szczegóły książki (Flask)
+│   └── add.html          # Formularz dodawania (Flask)
+└── README.md
+```
+
+## Sposób uruchomienia
+
+1. **Instalacja zależności**  
+   (jeśli używasz środowiska wirtualnego, aktywuj je)
+   ```
+   pip install flask
+   ```
+
+2. **Uruchomienie aplikacji webowej (Flask):**
+   ```
+   python app.py
+   ```
+   Aplikacja będzie dostępna pod adresem: [http://localhost:5000](http://localhost:5000)
+
+3. **Uruchomienie aplikacji konsolowej:**
+   ```
+   python main.py
+   ```
+
+## Przykładowe użycie
+
+- **Dodawanie książki lub audiobooka:**  
+  W interfejsie webowym kliknij "Dodaj nowe medium", wybierz typ, podaj tytuł, autora i ilość.
+
+- **Wypożyczanie, rezerwacja, zwrot, anulowanie rezerwacji:**  
+  Wybierz odpowiednią akcję z listy na stronie głównej lub użyj komend w konsoli (`borrow`, `reserve`, `return`).
+
+- **Bezpieczne usuwanie:**  
+  Nie można usunąć pozycji, która jest wypożyczona lub zarezerwowana.
+
 ## Złożoność i dekompozycja
 
 Złożony problem zarządzania biblioteką został rozbity na następujące pod-problemy:
@@ -33,6 +102,7 @@ Złożony problem zarządzania biblioteką został rozbity na następujące pod-
   - Widok: `templates/`, `view/consoleview.py`
   - Kontroler: `controller/librarycontroller.py`, `app.py`, `main.py`
 - **Command/Registry:** Pozwala rejestrować i wykonywać różne akcje (wypożyczenie, rezerwacja, zwrot, anulowanie) przez centralny rejestr poleceń (`service/library_service.py`).
-- **Observer (uproszczony):** Powiadamia użytkowników o zmianie statusu książki (`model/book.py`).
+
+---
 
 System jest gotowy do dalszego rozwoju i może być łatwo rozszerzony o nowe typy mediów, dodatkowe procesy lub inne interfejsy użytkownika.
